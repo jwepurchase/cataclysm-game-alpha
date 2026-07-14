@@ -1,5 +1,7 @@
 package com.johnpurchase.cataclysm.simulation;
 
+import java.util.Random;
+
 public class SimulationConstants {
     public static final double CORRUPTION_GROWTH_RATE = 0.01;
     public static final double DIFFUSION_RATE = 0.05;
@@ -20,4 +22,17 @@ public class SimulationConstants {
     public static final double TAX_RATE_MAX = 0.3;
     public static final double TREASURY_SEED_MIN = 500.0;
     public static final double TREASURY_SEED_MAX = 1500.0;
+
+    public static final double DEFECTION_THRESHOLD = 0.6;
+    public static final double DEFECTION_RATE = 0.05;
+
+    public static final double CORRUPTION_SPEND_COST = 50.0;
+    public static final double CORRUPTION_SPEND_REDUCTION = 0.05;
+
+    public static final double ABSORPTION_RATE = 0.02;
+
+    public static final double EXILE_TREASURY_PENALTY = 0.3;
+
+    public static final Random RANDOM = new Random(1);
+
 }

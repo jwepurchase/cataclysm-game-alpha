@@ -21,5 +21,7 @@ public class Main {
 
         SimulationLogger logger = new SimulationLogger();
         logger.printSummary(world.getHistory(), logInterval);
+        logger.printEventLog(world.getEventLog());
+
     }
 }

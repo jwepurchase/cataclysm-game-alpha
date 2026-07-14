@@ -22,5 +22,13 @@ public class SimulationLogger {
             }
             System.out.println();
         }
+
     }
+
+    public void printEventLog(List<String> eventLog) {
+        System.out.println("\n--- Event Log ---");
+        eventLog.forEach(System.out::println);
+    }
+
+
 }

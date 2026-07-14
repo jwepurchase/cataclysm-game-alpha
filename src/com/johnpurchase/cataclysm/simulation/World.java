@@ -30,6 +30,11 @@ public class World {
         dynasties.put(dynasty.getId(), dynasty);
     }
 
+    // Add to World.java
+    private final List<String> eventLog = new ArrayList<>();
+    public void logEvent(String event) { eventLog.add(event); }
+    public List<String> getEventLog() { return eventLog; }
+
     public Region getRegion(int id) { return regions.get(id); }
     public Dynasty getDynasty(int id) { return dynasties.get(id); }
     public Map<Integer, Region> getRegions() { return regions; }

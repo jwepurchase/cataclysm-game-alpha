@@ -2,6 +2,10 @@ package com.johnpurchase.cataclysm.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static com.johnpurchase.cataclysm.simulation.SimulationConstants.DEFECTION_RATE;
+import static com.johnpurchase.cataclysm.simulation.SimulationConstants.DEFECTION_THRESHOLD;
 
 public class Region {
     private final int id;
@@ -13,6 +17,7 @@ public class Region {
     private double taxRate;        // 0.0 to 1.0
     private int ownerId;           // dynasty id, -1 if independent
     private List<Integer> neighborIds;
+    private Random random = new Random(1);
 
     public Region(int id, int x, int y, int population,
                   double ideology, double corruption, double taxRate, int ownerId) {
@@ -39,6 +44,7 @@ public class Region {
     public double calculateCorruptionLoss() {
         return calculateBaseRevenue() - calculateActualRevenue();
     }
+
 
     // Getters
     public int getId() { return id; }

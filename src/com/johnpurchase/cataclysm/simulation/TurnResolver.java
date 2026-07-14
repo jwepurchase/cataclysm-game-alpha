@@ -12,6 +12,7 @@ public class TurnResolver {
     public void resolve(World world) {
         resolveRegions(world);
         resolveDynasties(world);
+        checkExileRecovery(world);
         world.incrementTurn();
         world.addSnapshot(takeSnapshot(world));
     }
@@ -45,13 +46,26 @@ public class TurnResolver {
                         (neighborAvg - region.getIdeology()) * DIFFUSION_RATE;
                 region.setIdeology(newIdeology);
             }
+
+            checkDefection(world, region);
+            checkAbsorption(world, region);
         }
     }
+
 
     private void resolveDynasties(World world) {
         for (Dynasty dynasty : world.getDynasties().values()) {
             List<Integer> regionIds = dynasty.getRegionIds();
-            if (regionIds.isEmpty()) continue;
+
+            if (regionIds.isEmpty()) {
+                if (!dynasty.isInExile()) {
+                    dynasty.setInExile(true);
+                    dynasty.setTreasury(dynasty.getTreasury() * EXILE_TREASURY_PENALTY);
+                    world.logEvent("Turn " + world.getTurn() + ": " + dynasty.getName()
+                            + " has been driven into exile");
+                }
+                continue;
+            }
 
             // Average corruption across owned regions
             double avgCorruption = regionIds.stream()
@@ -80,6 +94,14 @@ public class TurnResolver {
                             (ideologyAlignment * LEGITIMACY_WEIGHT_IDEOLOGY);
 
             dynasty.setLegitimacy(legitimacy);
+
+            if (dynasty.getRegionIds().isEmpty() && !dynasty.isInExile()) {
+                dynasty.setInExile(true);
+                dynasty.setTreasury(dynasty.getTreasury() * EXILE_TREASURY_PENALTY);
+                world.logEvent("Turn " + world.getTurn() + ": " + dynasty.getName()
+                        + " has been driven into exile");
+            }
+
         }
     }
 
@@ -106,4 +128,67 @@ public class TurnResolver {
 
         return new WorldSnapshot(world.getTurn(), dynastySnapshots, regionSnapshots);
     }
+
+    private void checkAbsorption(World world, Region region) {
+        if (region.getOwnerId() != -1) return;
+
+        // Find neighboring dynasties
+        region.getNeighborIds().stream()
+                .map(world::getRegion)
+                .filter(r -> r != null && r.getOwnerId() != -1)
+                .map(r -> world.getDynasty(r.getOwnerId()))
+                .filter(d -> d != null)
+                .findFirst()
+                .ifPresent(neighbor -> {
+                    if (RANDOM.nextDouble() < ABSORPTION_RATE) {
+                        region.setOwnerId(neighbor.getId());
+                        neighbor.addRegion(region.getId());
+
+                        world.logEvent("Turn " + world.getTurn() + ": Region " + region.getId()
+                                + " absorbed by " + neighbor.getName());
+                    }
+                });
+    }
+
+    // In resolveRegions(), after the corruption tick
+    private void checkDefection(World world, Region region) {
+        Dynasty owner = world.getDynasty(region.getOwnerId());
+
+        if (region.getOwnerId() == -1) return;
+
+        // Last region protection
+        if (owner.getRegionIds().size() <= 1) return;
+
+        if (region.getCorruption() > DEFECTION_THRESHOLD) {
+            double defectionChance = (region.getCorruption() - DEFECTION_THRESHOLD)
+                    / (1.0 - DEFECTION_THRESHOLD);
+            if (RANDOM.nextDouble() < defectionChance * DEFECTION_RATE) {
+                owner.removeRegion(region.getId());
+                region.setOwnerId(-1);
+
+                world.logEvent("Turn " + world.getTurn() + ": Region " + region.getId()
+                        + " defected from " + owner.getName());
+            }
+        }
+
+    }
+
+    private void checkExileRecovery(World world) {
+        for (Dynasty dynasty : world.getDynasties().values()) {
+            if (!dynasty.isInExile()) continue;
+
+            // Find any independent region to seed the comeback
+            world.getRegions().values().stream()
+                    .filter(r -> r.getOwnerId() == -1)
+                    .findFirst()
+                    .ifPresent(region -> {
+                        region.setOwnerId(dynasty.getId());
+                        dynasty.addRegion(region.getId());
+                        dynasty.setInExile(false);
+                        world.logEvent("Turn " + world.getTurn() + ": " + dynasty.getName()
+                                + " emerges from exile in Region " + region.getId());
+                    });
+        }
+    }
+
 }
