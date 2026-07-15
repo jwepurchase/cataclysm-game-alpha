@@ -14,7 +14,7 @@ public class World {
     private final List<WorldSnapshot> history;
     private final List<String> eventLog = new ArrayList<>();
 
-    public World(int mapWidth, int mapHeight) {
+    public World() {
         this.regions = new HashMap<>();
         this.dynasties = new HashMap<>();
         this.turn = 0;

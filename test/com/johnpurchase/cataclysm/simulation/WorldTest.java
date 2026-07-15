@@ -11,7 +11,7 @@ class WorldTest {
 
     @BeforeEach
     void setUp() {
-        world = new World(10, 10);
+        world = new World();
 
         Dynasty dynasty = new Dynasty(0, "Atreus", 1000.0, 0.5);
         world.addDynasty(dynasty);

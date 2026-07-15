@@ -14,7 +14,7 @@ public class WorldSeeder {
     }
 
     public World seed(int regionCount, int dynastyCount, int mapWidth, int mapHeight) {
-        World world = new World(mapWidth, mapHeight);
+        World world = new World();
 
         seedDynasties(world, dynastyCount);
         seedRegions(world, regionCount, mapWidth, mapHeight);
