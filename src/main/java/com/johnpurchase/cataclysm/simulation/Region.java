@@ -5,8 +5,6 @@ import java.util.List;
 
 public class Region {
     private final int id;
-    private final int x;
-    private final int y;
     private int population;
     private double ideology;       // 0.0 to 1.0
     private double corruption;     // 0.0 to 1.0
@@ -14,11 +12,9 @@ public class Region {
     private int ownerId;           // dynasty id, -1 if independent
     private List<Integer> neighborIds;
 
-    public Region(int id, int x, int y, int population,
+    public Region(int id, int population,
                   double ideology, double corruption, double taxRate, int ownerId) {
         this.id = id;
-        this.x = x;
-        this.y = y;
         this.population = population;
         this.ideology = ideology;
         this.corruption = corruption;
@@ -43,8 +39,6 @@ public class Region {
 
     // Getters
     public int getId() { return id; }
-    public int getX() { return x; }
-    public int getY() { return y; }
     public int getPopulation() { return population; }
     public double getIdeology() { return ideology; }
     public double getCorruption() { return corruption; }

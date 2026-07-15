@@ -12,7 +12,7 @@ class RegionTest {
     @BeforeEach
     void setUp() {
         // id, x, y, population, ideology, corruption, taxRate, ownerId
-        region = new Region(1, 0, 0, 1000, 0.5, 0.2, 0.1, 0);
+        region = new Region(1, 1000, 0.5, 0.2, 0.1, 0);
     }
 
     @Test

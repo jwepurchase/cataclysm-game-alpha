@@ -16,7 +16,7 @@ class WorldTest {
         Dynasty dynasty = new Dynasty(0, "Atreus", 1000.0, 0.5);
         world.addDynasty(dynasty);
 
-        Region region = new Region(0, 0, 0, 1000, 0.5, 0.0, 0.1, 0);
+        Region region = new Region(0, 1000, 0.5, 0.0, 0.1, 0);
         world.addRegion(region);
         dynasty.addRegion(0);
     }
@@ -52,7 +52,7 @@ class WorldTest {
         world.getRegion(0).setCorruption(0.9);
 
         // Add a second region so last-region protection doesn't block defection
-        Region region2 = new Region(1, 1, 0, 1000, 0.5, 0.0, 0.1, 0);
+        Region region2 = new Region(1, 1000, 0.5, 0.0, 0.1, 0);
         world.addRegion(region2);
         world.getDynasty(0).addRegion(1);
 
@@ -70,7 +70,7 @@ class WorldTest {
     @Test
     void dynastyWithNoRegionsShouldRecoverByEndOfTurn() {
         // Add an independent region for the exile recovery to claim
-        Region region2 = new Region(1, 1, 0, 1000, 0.5, 0.0, 0.1, -1);
+        Region region2 = new Region(1, 1000, 0.5, 0.0, 0.1, -1);
         world.addRegion(region2);
 
         // Strip the dynasty of its region

@@ -17,7 +17,7 @@ public class WorldSeeder {
         World world = new World();
 
         seedDynasties(world, dynastyCount);
-        seedRegions(world, regionCount, mapWidth, mapHeight);
+        seedRegions(world, regionCount);
         calculateNeighbors(world);
         assignRegionsToDynasties(world);
 
@@ -36,16 +36,14 @@ public class WorldSeeder {
         }
     }
 
-    private void seedRegions(World world, int regionCount, int mapWidth, int mapHeight) {
+    private void seedRegions(World world, int regionCount) {
         for (int i = 0; i < regionCount; i++) {
-            int x = random.nextInt(mapWidth);
-            int y = random.nextInt(mapHeight);
             int population = POP_MIN + random.nextInt(POP_MAX - POP_MIN);
             double ideology = random.nextDouble();
             double corruption = random.nextDouble() * CORRUPTION_SEED_MAX;
             double taxRate = TAX_RATE_MIN +
                     random.nextDouble() * (TAX_RATE_MAX - TAX_RATE_MIN);
-            world.addRegion(new Region(i, x, y, population,
+            world.addRegion(new Region(i, population,
                     ideology, corruption, taxRate, -1));
         }
     }
@@ -54,8 +52,6 @@ public class WorldSeeder {
         for (Region region : world.getRegions().values()) {
             world.getRegions().values().stream()
                     .filter(other -> other.getId() != region.getId())
-                    .filter(other -> distance(region, other) < NEIGHBOR_DISTANCE_THRESHOLD)
-                    .sorted((a, b) -> Double.compare(distance(region, a), distance(region, b)))
                     .limit(MAX_NEIGHBORS)
                     .forEach(neighbor -> region.addNeighbor(neighbor.getId()));
         }
@@ -70,9 +66,4 @@ public class WorldSeeder {
         }
     }
 
-    private double distance(Region a, Region b) {
-        int dx = a.getX() - b.getX();
-        int dy = a.getY() - b.getY();
-        return Math.sqrt(dx * dx + dy * dy);
-    }
 }
