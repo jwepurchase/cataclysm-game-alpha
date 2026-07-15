@@ -11,7 +11,7 @@ public class Main {
         int logInterval = 10;
         long seed = 42L;
 
-        WorldSeeder seeder = new WorldSeeder(seed);
+        RandomWorldSeeder seeder = new RandomWorldSeeder(seed);
         World world = seeder.seed(regionCount, dynastyCount, mapWidth, mapHeight);
 
         for (int i = 0; i < turns; i++) {
