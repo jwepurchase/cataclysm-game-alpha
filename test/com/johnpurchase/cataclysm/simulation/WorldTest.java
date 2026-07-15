@@ -1,22 +1,17 @@
 package com.johnpurchase.cataclysm.simulation;
 
-import com.johnpurchase.cataclysm.simulation.Dynasty;
-import com.johnpurchase.cataclysm.simulation.Region;
-import com.johnpurchase.cataclysm.simulation.World;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TurnResolverTest {
+class WorldTest {
 
     private World world;
-    private TurnResolver resolver;
 
     @BeforeEach
     void setUp() {
         world = new World(10, 10);
-        resolver = new TurnResolver();
 
         Dynasty dynasty = new Dynasty(0, "Atreus", 1000.0, 0.5);
         world.addDynasty(dynasty);
@@ -28,26 +23,26 @@ class TurnResolverTest {
 
     @Test
     void resolveShouldIncrementTurn() {
-        resolver.resolve(world);
+        world.resolve();
         assertEquals(1, world.getTurn());
     }
 
     @Test
     void resolveShouldAddRevenueToOwnerTreasury() {
-        resolver.resolve(world);
+        world.resolve();
         // 1000 * 0.1 * (1 - 0.0) = 100.0 added to 1000.0
         assertEquals(1100.0, world.getDynasty(0).getTreasury(), 0.001);
     }
 
     @Test
     void resolveShouldIncreaseCorruption() {
-        resolver.resolve(world);
+        world.resolve();
         assertTrue(world.getRegion(0).getCorruption() > 0.0);
     }
 
     @Test
     void resolveShouldAddSnapshotToHistory() {
-        resolver.resolve(world);
+        world.resolve();
         assertEquals(1, world.getHistory().size());
     }
 
@@ -63,7 +58,7 @@ class TurnResolverTest {
 
         boolean defected = false;
         for (int i = 0; i < 200; i++) {
-            resolver.resolve(world);
+            world.resolve();
             if (world.getRegion(0).getOwnerId() == -1) {
                 defected = true;
                 break;
@@ -78,7 +73,7 @@ class TurnResolverTest {
         world.getDynasty(0).removeRegion(0);
         world.getRegion(0).setOwnerId(-1);
 
-        resolver.resolve(world);
+        world.resolve();
 
         assertFalse(world.getDynasty(0).isInExile(), "isInExile should be false");
         assertEquals(1, world.getDynasty(0).getRegionIds().size(), "Region count should be 1");

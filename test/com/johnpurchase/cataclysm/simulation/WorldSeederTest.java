@@ -1,6 +1,5 @@
 package com.johnpurchase.cataclysm.simulation;
 
-import com.johnpurchase.cataclysm.simulation.World;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -14,9 +14,8 @@ public class Main {
         WorldSeeder seeder = new WorldSeeder(seed);
         World world = seeder.seed(regionCount, dynastyCount, mapWidth, mapHeight);
 
-        TurnResolver resolver = new TurnResolver();
         for (int i = 0; i < turns; i++) {
-            resolver.resolve(world);
+            world.resolve();
         }
 
         SimulationLogger logger = new SimulationLogger();

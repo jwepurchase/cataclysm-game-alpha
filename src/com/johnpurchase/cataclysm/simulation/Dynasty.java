@@ -1,10 +1,8 @@
 package com.johnpurchase.cataclysm.simulation;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import static com.johnpurchase.cataclysm.simulation.SimulationConstants.*;
 
 public class Dynasty {
     private final int id;
@@ -38,21 +36,6 @@ public class Dynasty {
         regionIds.remove(Integer.valueOf(regionId));
     }
 
-    // In resolveDynasties(), before legitimacy calculation
-    private void spendOnCorruption(World world, Dynasty dynasty) {
-        if (dynasty.getTreasury() < CORRUPTION_SPEND_COST) return;
-
-        dynasty.getRegionIds().stream()
-                .map(world::getRegion)
-                .filter(r -> r != null)
-                .max(Comparator.comparingDouble(Region::getCorruption))
-                .ifPresent(worstRegion -> {
-                    dynasty.setTreasury(dynasty.getTreasury() - CORRUPTION_SPEND_COST);
-                    worstRegion.setCorruption(
-                            worstRegion.getCorruption() - CORRUPTION_SPEND_REDUCTION);
-                });
-    }
-
     public boolean isInExile() { return inExile; }
     public void setInExile(boolean inExile) { this.inExile = inExile; }
 
@@ -68,6 +51,5 @@ public class Dynasty {
 
     // Setters
     public void setTreasury(double treasury) { this.treasury = treasury; }
-    public void setIdeology(double ideology) { this.ideology = Math.max(0.0, Math.min(1.0, ideology)); }
     public void setLegitimacy(double legitimacy) { this.legitimacy = Math.max(0.0, Math.min(1.0, legitimacy)); }
 }
