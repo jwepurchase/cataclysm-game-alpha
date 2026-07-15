@@ -1,9 +1,14 @@
 package com.johnpurchase.cataclysm.simulation;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Getter
+@Setter
 public class Dynasty {
     private final int id;
     private final String name;
@@ -36,20 +41,6 @@ public class Dynasty {
         regionIds.remove(Integer.valueOf(regionId));
     }
 
-    public boolean isInExile() { return inExile; }
-    public void setInExile(boolean inExile) { this.inExile = inExile; }
-
-
-
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public double getTreasury() { return treasury; }
-    public double getIdeology() { return ideology; }
-    public double getLegitimacy() { return legitimacy; }
-    public List<Integer> getRegionIds() { return regionIds; }
-
     // Setters
-    public void setTreasury(double treasury) { this.treasury = treasury; }
     public void setLegitimacy(double legitimacy) { this.legitimacy = Math.max(0.0, Math.min(1.0, legitimacy)); }
 }

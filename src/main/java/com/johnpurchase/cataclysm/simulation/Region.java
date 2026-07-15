@@ -1,8 +1,13 @@
 package com.johnpurchase.cataclysm.simulation;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class Region {
     private final int id;
     private int population;
@@ -37,17 +42,9 @@ public class Region {
     }
 
 
-    // Getters
-    public int getId() { return id; }
-    public int getPopulation() { return population; }
-    public double getIdeology() { return ideology; }
-    public double getCorruption() { return corruption; }
-    public int getOwnerId() { return ownerId; }
-    public List<Integer> getNeighborIds() { return neighborIds; }
-
     // Setters
     public void setIdeology(double ideology) { this.ideology = Math.max(0.0, Math.min(1.0, ideology)); }
     public void setCorruption(double corruption) { this.corruption = Math.max(0.0, Math.min(1.0, corruption)); }
-    public void setOwnerId(int ownerId) { this.ownerId = ownerId; }
+
     public void addNeighbor(int neighborId) { this.neighborIds.add(neighborId); }
 }
