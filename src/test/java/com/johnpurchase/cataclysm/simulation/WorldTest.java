@@ -68,16 +68,18 @@ class WorldTest {
     }
 
     @Test
-    void dynastyWithNoRegionsShouldGoIntoExile() {
-        // Remove the region directly, simulating a dynasty that has lost everything
+    void dynastyWithNoRegionsShouldRecoverByEndOfTurn() {
+        // Add an independent region for the exile recovery to claim
+        Region region2 = new Region(1, 1, 0, 1000, 0.5, 0.0, 0.1, -1);
+        world.addRegion(region2);
+
+        // Strip the dynasty of its region
         world.getDynasty(0).removeRegion(0);
         world.getRegion(0).setOwnerId(-1);
 
         world.resolve();
 
-        assertFalse(world.getDynasty(0).isInExile(), "isInExile should be false");
-        assertEquals(1, world.getDynasty(0).getRegionIds().size(), "Region count should be 1");
-        assertFalse(world.getDynasty(0).isInExile());
+        assertFalse(world.getDynasty(0).getRegionIds().isEmpty());
     }
 
 

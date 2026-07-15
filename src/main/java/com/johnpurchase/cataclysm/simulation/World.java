@@ -1,5 +1,7 @@
 package com.johnpurchase.cataclysm.simulation;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import static com.johnpurchase.cataclysm.simulation.SimulationConstants.*;
 
+@Getter
 public class World {
     private final Map<Integer, Region> regions;
     private final Map<Integer, Dynasty> dynasties;
@@ -34,9 +37,6 @@ public class World {
 
     public Region getRegion(int id) { return regions.get(id); }
     public Dynasty getDynasty(int id) { return dynasties.get(id); }
-    public Map<Integer, Region> getRegions() { return regions; }
-    public Map<Integer, Dynasty> getDynasties() { return dynasties; }
-    public int getTurn() { return turn; }
     public List<WorldSnapshot> getHistory() { return history; }
 
     public void incrementTurn() { turn++; }
@@ -115,25 +115,29 @@ public class World {
                 });
     }
 
-    // In resolveRegions(), after the corruption tick
     void checkDefection(Region region) {
-        Dynasty owner = getDynasty(region.getOwnerId());
+        assert region != null;
 
-        if (region.getOwnerId() == -1) return;
+        Dynasty owner;
 
-        // Last region protection
-        if (owner.getRegionIds().size() <= 1) return;
+        if(region.getOwnerId() >= 0) {
+            owner = getDynasty(region.getOwnerId());
 
-        if (region.getCorruption() > DEFECTION_THRESHOLD) {
-            double defectionChance = (region.getCorruption() - DEFECTION_THRESHOLD)
-                    / (1.0 - DEFECTION_THRESHOLD);
-            if (RANDOM.nextDouble() < defectionChance * DEFECTION_RATE) {
-                owner.removeRegion(region.getId());
-                region.setOwnerId(-1);
+            // Last region protection
+            if (owner.getRegionIds().size() <= 1) return;
 
-                logEvent("Turn " + getTurn() + ": Region " + region.getId()
-                        + " defected from " + owner.getName());
+            if (region.getCorruption() > DEFECTION_THRESHOLD) {
+                double defectionChance = (region.getCorruption() - DEFECTION_THRESHOLD)
+                        / (1.0 - DEFECTION_THRESHOLD);
+                if (RANDOM.nextDouble() < defectionChance * DEFECTION_RATE) {
+                    owner.removeRegion(region.getId());
+                    region.setOwnerId(-1);
+
+                    logEvent("Turn " + getTurn() + ": Region " + region.getId()
+                            + " defected from " + owner.getName());
+                }
             }
+
         }
 
     }
